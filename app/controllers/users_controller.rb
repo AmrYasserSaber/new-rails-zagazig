@@ -22,9 +22,14 @@ class UsersController < ApplicationController
   # POST /users or /users.json
   def create
     @user = User.new(user_params)
-    if @user.save
-      redirect_to @user, notice: "User was successfully created."
-    else
+    begin
+      if @user.save
+        redirect_to @user, notice: "User was successfully created."
+      else
+        render :new, status: :unprocessable_entity
+      end
+    rescue ActiveRecord::RecordNotUnique
+      @user.errors.add(:email, "has already been taken")
       render :new, status: :unprocessable_entity
     end
   end
@@ -32,9 +37,14 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1 or /users/1.json
   def update
     @user = User.find(params[:id])
-    if @user.update(user_params)
-      redirect_to @user, notice: "User was successfully updated."
-    else
+    begin
+      if @user.update(user_params)
+        redirect_to @user, notice: "User was successfully updated."
+      else
+        render :edit, status: :unprocessable_entity
+      end
+    rescue ActiveRecord::RecordNotUnique
+      @user.errors.add(:email, "has already been taken")
       render :edit, status: :unprocessable_entity
     end
   end
@@ -48,6 +58,6 @@ class UsersController < ApplicationController
 
   private
   def user_params
-    params.expect(user: [ :name, :email ])
+    params.require(:user).permit(:name, :email, :address)
   end
 end

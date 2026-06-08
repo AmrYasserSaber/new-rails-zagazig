@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_08_070442) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_08_075352) do
+  create_table "edited_bies", force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.integer "post_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["post_id"], name: "index_edited_bies_on_post_id"
+    t.index ["user_id"], name: "index_edited_bies_on_user_id"
+  end
+
   create_table "likes", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "post_id", null: false
@@ -36,6 +46,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_08_070442) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "edited_bies", "posts"
+  add_foreign_key "edited_bies", "users"
   add_foreign_key "likes", "posts"
   add_foreign_key "likes", "users"
   add_foreign_key "posts", "users"

@@ -41,5 +41,13 @@ puts "Creating likes..."
   )
 end
 
+puts "Creating edits..."
+500.times do
+  EditedBy.find_or_create_by!(
+    user: all_users.sample,
+    post: all_posts.sample
+  )
+end
+
 puts "Database seeded successfully!"
-puts "Created #{User.count} Users, #{Post.count} Posts, and #{Like.count} Likes."
+puts "Created #{User.count} Users, #{Post.count} Posts, #{Like.count} Likes, and #{EditedBy.count} Edits."
